@@ -35,7 +35,7 @@ public class WebScraper
         }
     }
 
-    public void ExtractProductDetails(string htmlContent)
+    public List<ProductDetails> ExtractProductDetails(string htmlContent)
     {
         var htmlDocument = new HtmlDocument();
         htmlDocument.LoadHtml(htmlContent);
@@ -45,7 +45,7 @@ public class WebScraper
         if (productNodes == null)
         {
             Console.WriteLine("No products are found");
-            return;
+            return null;
         }
         
         List<ProductDetails> productDetailsList = new List<ProductDetails>();
@@ -69,11 +69,13 @@ public class WebScraper
                 var parameters = ScrapeProductDetailsFromLink(productLink).Result;
                 
                 var productDetails = new ProductDetails(productName, productPriceCurrency, productPriceAmount,  productLink, parameters);
-                
-                Console.WriteLine($"Product: {productName}, price:{productPriceAmount} {productPriceCurrency}, link:{productLink}");
+                productDetailsList.Add(productDetails);
+
             }
             
         }
+
+        return productDetailsList;
     }
 
     public async Task<Dictionary<string, string>> ScrapeProductDetailsFromLink(string productUrl)

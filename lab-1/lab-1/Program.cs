@@ -14,23 +14,20 @@ class Program
         string htmlContent = await webScraper.FetchSiteContent(url);
         
         // Console.WriteLine(htmlContent);
-            
+        List<ProductDetails> productDetailsList = new List<ProductDetails>();
+        
         if (!htmlContent.StartsWith("Error"))
         {
-            webScraper.ExtractProductDetails(htmlContent);
+            productDetailsList = webScraper.ExtractProductDetails(htmlContent);
         }
         else
         {
             Console.WriteLine(htmlContent);
         }
-        
 
-        // var details = await webScraper.ScrapeProductDetailsFromLink(
-        //     "https://www.cactus.md/ro/catalogue/electronice/telefone/mobilnye-telefony/allview-d3-senior-duos-black/");
-        
-         
+        var productFactory = new ProductFilterFactory(productDetailsList);
+        var filteredProductDetails = productFactory.ProcessProducts(100, 500) ;
 
-        // Console.WriteLine(htmlContent);
     }
 }
 
