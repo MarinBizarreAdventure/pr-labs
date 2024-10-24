@@ -1,0 +1,62 @@
+# Ignore build outputs
+bin/
+obj/
+
+# Ignore Rider project files
+.idea/
+.idea_modules/
+.sln.iml
+
+# Ignore User-specific Rider settings
+*.sln.ide.*
+*.sln.iml
+*.DotSettings.user
+
+# Ignore Rider workspace settings
+.idea/**/workspace.xml
+.idea/**/tasks.xml
+.idea/**/usage.statistics.xml
+.idea/**/contentModel.xml
+.idea/**/dictionaries
+
+# Ignore build logs and intermediate files
+*.user
+*.lock.json
+*.log
+*.vspscc
+*.vssscc
+
+# Ignore NuGet Packages
+*.nupkg
+*.snupkg
+packages/
+.vscode/
+
+# Ignore build artifacts for Mono/.NET
+*.dll
+*.exe
+*.pdb
+*.mdb
+
+# Ignore Visual Studio temp files
+.vscode/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Ignore ReSharper files
+_ReSharper*/
+*.DotSettings.user
+
+# Ignore Rider-specific run/debug configurations
+.idea/.idea/
+.idea/runConfigurations/
+.idea/.idea/**
+
+# Ignore MacOS system files
+.DS_Store
+
+# Ignore Rider's solution cache
+.idea/.idea/shelf/
+.idea/.idea/libraries/
