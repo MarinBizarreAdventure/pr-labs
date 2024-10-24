@@ -7,13 +7,24 @@ class Program
 {
     static async Task Main(string[] args)
     {
-        GetRequest getRequest = new GetRequest();
+        WebScraper webScraper = new WebScraper();
 
-        string url = "https://www.cactus.md/ru/catalogue/electronice/telefone/mobilnye-telefony/";
+        string url = "https://www.cactus.md/ro/catalogue/electronice/telefone/mobilnye-telefony/";
 
-        string htmlContent = await getRequest.FetchSiteContent(url);
-        
+        string htmlContent = await webScraper.FetchSiteContent(url);
+
         Console.WriteLine(htmlContent);
+            
+        if (!htmlContent.StartsWith("Error"))
+        {
+            webScraper.ExtractProductDetails(htmlContent);
+        }
+        else
+        {
+            Console.WriteLine(htmlContent);
+        }
+        
+        // Console.WriteLine(htmlContent);
     }
 }
 
