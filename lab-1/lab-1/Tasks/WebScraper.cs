@@ -54,16 +54,100 @@ public class WebScraper
 
             var priceNode = productNode.SelectSingleNode(".//div[@class='catalog__pill__controls__price']");
 
-            if (nameNode != null && priceNode != null)
+            var linkNode = productNode.SelectSingleNode(".//a[@href]");
+
+            if (nameNode != null && priceNode != null && linkNode != null)
             {
                 string productName = nameNode.InnerText.Trim();
-                string productPrice = priceNode.InnerText.Trim();
+                string priceText = priceNode.InnerText.Trim();
+                string productLink = "https://www.cactus.md" + linkNode.GetAttributeValue("href", string.Empty);
                 
-                Console.WriteLine($"Product: {productName}, price:{productPrice}");
+                (int productPriceAmount, string productPriceCurrency) = ParsePrice(priceText);
+
+                var parameters = ScrapeProductDetailsFromLink(productLink).Result;
+                
+                var productDetails = new ProductDetails(productName, productPriceCurrency, productPriceAmount,  productLink, parameters);
+                
+                Console.WriteLine($"Product: {productName}, price:{productPriceAmount} {productPriceCurrency}, link:{productLink}");
             }
             
         }
-        
     }
 
+    public async Task<Dictionary<string, string>> ScrapeProductDetailsFromLink(string productUrl)
+    {
+        try
+        {
+            string htmlContent = await FetchSiteContent(productUrl);
+            if (string.IsNullOrEmpty(htmlContent))
+            {
+                Console.WriteLine("No HTML content fetched.");
+                return null;
+            }
+
+            HtmlDocument htmlDocument = new HtmlDocument();
+            htmlDocument.LoadHtml(htmlContent);
+
+            var productNode = htmlDocument.DocumentNode.SelectSingleNode("//div[@class='catalog__item__panel' and @itemscope and @itemtype='http://schema.org/Product']");
+
+            if (productNode != null)
+            {
+                var parametersDiv = productNode.SelectSingleNode(".//div[@id='ctl00_cphMain_divParameters']");
+
+                if (parametersDiv != null)
+                {
+                    var parameterNodes = parametersDiv.SelectNodes(".//ul/li");
+                    var parameters = new Dictionary<string, string>();
+
+                    foreach (var parameterNode in parameterNodes)
+                    {
+                        var titleNode = parameterNode.SelectSingleNode(".//h2[@class='catalog__characteristic__title']");
+                        if (titleNode != null)
+                        {
+                            string title = titleNode.InnerText.Trim();
+
+                            var unitNode = parameterNode.SelectSingleNode(".//span[@class='catalog__characteristic__unit']");
+                            string unit = unitNode != null ? unitNode.InnerText.Trim() : string.Empty;
+
+                            parameters[title] = unit;
+                        }
+                    }
+
+                    foreach (var param in parameters)
+                    {
+                        Console.WriteLine($"{param.Key}: {param.Value}");
+                    }
+
+                    return parameters; 
+                }
+                else
+                {
+                    Console.WriteLine("Parameters div not found.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Product node not found.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error fetching product details: {ex.Message}");
+        }
+
+        return null; 
+    }
+
+    private static (int, string) ParsePrice(string priceText)
+    {
+        int lastSpaceIndex = priceText.LastIndexOf(' ');
+        string amountText = priceText.Substring(0, lastSpaceIndex);
+        string currency = priceText.Substring(lastSpaceIndex + 1);
+
+        int amount = int.Parse(amountText.Replace(" ", ""));
+        
+        return (amount, currency);
+    }
+    
+    
 }

@@ -12,8 +12,8 @@ class Program
         string url = "https://www.cactus.md/ro/catalogue/electronice/telefone/mobilnye-telefony/";
 
         string htmlContent = await webScraper.FetchSiteContent(url);
-
-        Console.WriteLine(htmlContent);
+        
+        // Console.WriteLine(htmlContent);
             
         if (!htmlContent.StartsWith("Error"))
         {
@@ -24,6 +24,12 @@ class Program
             Console.WriteLine(htmlContent);
         }
         
+
+        // var details = await webScraper.ScrapeProductDetailsFromLink(
+        //     "https://www.cactus.md/ro/catalogue/electronice/telefone/mobilnye-telefony/allview-d3-senior-duos-black/");
+        
+         
+
         // Console.WriteLine(htmlContent);
     }
 }
