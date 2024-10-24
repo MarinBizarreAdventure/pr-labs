@@ -47,7 +47,9 @@ public class WebScraper
             Console.WriteLine("No products are found");
             return;
         }
-
+        
+        List<ProductDetails> productDetailsList = new List<ProductDetails>();
+        
         foreach (var productNode in productNodes)
         {
             var nameNode = productNode.SelectSingleNode(".//span[@class='catalog__pill__text__title']");
