@@ -11,22 +11,28 @@ class Program
 
         string url = "https://www.cactus.md/ro/catalogue/electronice/telefone/mobilnye-telefony/";
 
-        string htmlContent = await webScraper.FetchSiteContent(url);
-        
-        // Console.WriteLine(htmlContent);
-        List<ProductDetails> productDetailsList = new List<ProductDetails>();
-        
-        if (!htmlContent.StartsWith("Error"))
-        {
-            productDetailsList = webScraper.ExtractProductDetails(htmlContent);
-        }
-        else
-        {
-            Console.WriteLine(htmlContent);
-        }
+        // string htmlContent = await webScraper.FetchSiteContent(url);
 
-        var productFactory = new ProductFilterFactory(productDetailsList);
-        var filteredProductDetails = productFactory.ProcessProducts(100, 500) ;
+        string htmlContentlinella = await webScraper.FetchSiteContentUsingTCP("https://linella.md/ro");
+        Console.WriteLine(htmlContentlinella);
+
+        // string htmlContent = CactusHtmlContent.cactusHtmlContent;
+        // // Console.WriteLine(htmlContent);
+        // List<ProductDetails> productDetailsList = new List<ProductDetails>();
+        //
+        // if (!htmlContent.StartsWith("Error"))
+        // {
+        //     productDetailsList = webScraper.ExtractProductDetails(htmlContent);
+        // }
+        // else
+        // {
+        //     Console.WriteLine(htmlContent);
+        // }
+        //
+        // var productFactory = new ProductFilterFactory(productDetailsList);
+        // var filteredProductDetails = productFactory.ProcessProducts(100, 500);
+        //
+        // filteredProductDetails.PrintResults();
 
     }
 }

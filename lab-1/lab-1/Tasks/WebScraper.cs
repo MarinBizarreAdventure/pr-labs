@@ -3,6 +3,9 @@ using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using HtmlAgilityPack;
+using System.Net.Sockets;
+using System.Text;
+using System.Net.Security;
 
 public class WebScraper
 {
@@ -11,6 +14,62 @@ public class WebScraper
     public WebScraper()
     {
         _httpClient = new HttpClient();
+    }
+    
+    public async Task<string> FetchSiteContentUsingTCP(string url)
+    {
+        try
+        {
+            Uri uri = new Uri(url);
+            string host = uri.Host;
+            string path = uri.PathAndQuery;
+            int port = uri.Scheme == "https" ? 443 : 80; 
+            
+            using (TcpClient tcpClient = new TcpClient())
+            {
+                await tcpClient.ConnectAsync(host, port);
+
+                Stream stream = tcpClient.GetStream(); 
+                if (uri.Scheme == "https")
+                {
+                    var sslStream = new SslStream(stream, false, (sender, cert, chain, sslPolicyErrors) => true);
+                    await sslStream.AuthenticateAsClientAsync(host);
+                    stream = sslStream;
+                }
+
+                using (StreamWriter writer = new StreamWriter(stream))
+                using (StreamReader reader = new StreamReader(stream))
+                {
+                    string request = $"GET {path} HTTP/1.1\r\nHost: {host}\r\nConnection: close\r\n\r\n";
+                    await writer.WriteAsync(request);
+                    await writer.FlushAsync();
+
+                    StringBuilder responseBuilder = new StringBuilder();
+                    char[] buffer = new char[1024];
+                    int bytesRead;
+                    while ((bytesRead = await reader.ReadAsync(buffer, 0, buffer.Length)) > 0)
+                    {
+                         responseBuilder.Append(buffer, 0, bytesRead);
+                    }
+
+                    string fullResponse = responseBuilder.ToString();
+                    Console.WriteLine(fullResponse);
+                    int bodyIndex = fullResponse.IndexOf("\r\n\r\n");
+                    if (bodyIndex != -1)
+                    {
+                        return fullResponse.Substring(bodyIndex + 4);  // Extract the body after headers
+                    }
+                    else
+                    {
+                        return "Error: Could not find the HTTP response body.";
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            return $"Exception: {ex.Message}";
+        }
     }
 
     public async Task<string> FetchSiteContent(string url)
@@ -115,11 +174,6 @@ public class WebScraper
 
                             parameters[title] = unit;
                         }
-                    }
-
-                    foreach (var param in parameters)
-                    {
-                        Console.WriteLine($"{param.Key}: {param.Value}");
                     }
 
                     return parameters; 

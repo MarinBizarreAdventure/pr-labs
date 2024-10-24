@@ -23,4 +23,6 @@ public class FilteredProductDetails
             Console.WriteLine($"Product: {product.Name}, Price: {product.PriceAmount} {product.PriceCurrency}, Link: {product.ProductLink}");
         }
     }
+    
+    
 }

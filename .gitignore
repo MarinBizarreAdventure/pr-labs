@@ -7,6 +7,8 @@ obj/
 .idea_modules/
 .sln.iml
 
+CactusHtmlContent.cs
+
 # Ignore User-specific Rider settings
 *.sln.ide.*
 *.sln.iml
