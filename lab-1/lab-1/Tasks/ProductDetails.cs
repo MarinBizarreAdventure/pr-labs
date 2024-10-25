@@ -47,7 +47,6 @@ public class ProductDetails
         jsonBuilder.AppendFormat("\"PriceAmount\": {0},", PriceAmount);
         jsonBuilder.AppendFormat("\"Link\": \"{0}\",", ProductLink);
 
-        // Serialize Parameters as a nested JSON object
         jsonBuilder.Append("\"Parameters\": {");
         foreach (var param in ProductParameters)
         {
@@ -100,7 +99,6 @@ public class ProductDetails
         var priceAmount = int.Parse(parts[2]);
         var link = parts[3];
 
-        // Deserialize dictionary (Parameters)
         var parameters = new Dictionary<string, string>();
         var paramString = parts[4].Trim('{', '}');
         var paramPairs = paramString.Split(',');
@@ -121,13 +119,11 @@ public class ProductDetails
     {
         var serializedString = new StringBuilder();
 
-        // Serialize basic fields
         serializedString.Append(Name).Append("|");
         serializedString.Append(PriceCurrency).Append("|");
         serializedString.Append(PriceAmount).Append("|");
         serializedString.Append(ProductLink).Append("|");
 
-        // Serialize dictionary (Parameters)
         serializedString.Append("{");
         foreach (var param in ProductParameters)
         {
@@ -135,7 +131,7 @@ public class ProductDetails
         }
         if (ProductParameters.Count > 0)
         {
-            serializedString.Length--; // Remove trailing comma
+            serializedString.Length--; 
         }
         serializedString.Append("}");
 

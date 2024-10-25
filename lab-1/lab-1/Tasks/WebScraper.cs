@@ -53,11 +53,10 @@ public class WebScraper
                     }
 
                     string fullResponse = responseBuilder.ToString();
-                    Console.WriteLine(fullResponse);
                     int bodyIndex = fullResponse.IndexOf("\r\n\r\n");
                     if (bodyIndex != -1)
                     {
-                        return fullResponse.Substring(bodyIndex + 4);  // Extract the body after headers
+                        return fullResponse.Substring(bodyIndex + 4);  
                     }
                     else
                     {
@@ -196,14 +195,12 @@ public class WebScraper
         return null; 
     }
 
-    private static (int, string) ParsePrice(string priceText)
+    public static (int, string) ParsePrice(string priceText)
     {
-        int lastSpaceIndex = priceText.LastIndexOf(' ');
-        string amountText = priceText.Substring(0, lastSpaceIndex);
-        string currency = priceText.Substring(lastSpaceIndex + 1);
-
+        string currency = priceText[^3..];
+        string amountText = priceText.Substring(0, priceText.Length - 3).Trim();
         int amount = int.Parse(amountText.Replace(" ", ""));
-        
+
         return (amount, currency);
     }
     

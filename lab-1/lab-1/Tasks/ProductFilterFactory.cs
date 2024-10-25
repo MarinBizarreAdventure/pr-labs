@@ -16,15 +16,15 @@ public class ProductFilterFactory
     {
         var convertedProducts = productDetailsList.Select(p =>
         {
-            if (p.PriceCurrency == "EUR")
+            if (p.PriceCurrency == "eur")
             {
                 p.PriceAmount = (int)(p.PriceAmount * EURToMDL);
-                p.PriceCurrency = "MDL";
+                p.PriceCurrency = "lei";
             }
-            else if (p.PriceCurrency == "MDL")
+            else if (p.PriceCurrency == "lei")
             {
                 p.PriceAmount = (int)(p.PriceAmount * MDLToEUR);
-                p.PriceCurrency = "EUR";
+                p.PriceCurrency = "eur";
             }
             return p;
         }).ToList();
