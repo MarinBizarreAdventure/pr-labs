@@ -10,6 +10,9 @@ from app.infrastructure.database.db import DB
 from typing import List
 from typing import Optional
 from fastapi import Query
+from fastapi import FastAPI, UploadFile, File
+import json
+import logging
 
 
 class UserRouter:
@@ -97,3 +100,18 @@ class UserRouter:
         ):
             user_responses = self.user_service.list_users_with_pagination(offset, limit)
             return user_responses
+        
+
+        @self.router.post("/upload-json/")
+        async def upload_json(file: UploadFile = File(...)):
+            try:
+                content = await file.read()
+
+                json_data = json.loads(content)
+
+                logging.info(f"Uploaded JSON: {json_data}")
+
+                return {"message": "File uploaded and logged successfully."}
+
+            except json.JSONDecodeError:
+                return {"error": "Invalid JSON file."}
