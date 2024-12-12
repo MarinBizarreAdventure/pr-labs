@@ -1,0 +1,27 @@
+# Python specific
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+*.egg
+*.log
+*.sqlite3
+*.db
+
+# Virtual Environment
+venv/
+.env
+
+# Pytest cache
+.pytest_cache/
+
+# IDE or Editor specific
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# System files
+.DS_Store
+Thumbs.db
